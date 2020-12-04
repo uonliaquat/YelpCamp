@@ -9,6 +9,10 @@ const campGroundSchema = new Schema({
     description: String,
     location: String,
     image: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
@@ -27,4 +31,4 @@ campGroundSchema.post('findOneAndDelete', async function(doc){
     }
 })
 
-module.exports = mongoose.model('CampGround', campGroundSchema);   
+module.exports = mongoose.model('CampGround', campGroundSchema);  
