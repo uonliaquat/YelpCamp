@@ -70,7 +70,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
@@ -86,11 +86,15 @@ app.get('/fakeUser', async (req, res) => {
     res.send(newUser);
 })
 
+
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewsRoutes);
-app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use('/', (req, res, next) => {
+    res.render('home');
+})
 
 
 app.all('*', (req, res, next) =>{

@@ -4,7 +4,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v10', // stylesheet location
     center: campground.geometry.coordinates, // starting position [lng, lat]
-    zoom: 20 // starting zoom
+    zoom: 4 // starting zoom
 });
 
 new mapboxgl.Marker()
