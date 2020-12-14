@@ -21,11 +21,13 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const userRoutes = require('./routes/user');
+const dbURL = process.env.DB_URL ||  'mongodb://localhost:27017/yelp-camp'
+
+const MongoStore = require('connect-mongo')(session);
 
 
 
-
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+mongoose.connect(dbURL, {
     useNewUrlParser: true,  
     userCreateIndex: true,
     useUnifiedTopology: true,
@@ -46,12 +48,28 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true}))
 app.use(methodOverride('_method'));
 
-app.listen(3000, () => {
-    console.log('Serving on PORT 3000');
+const port = process.env.PORT || 3000
+
+app.listen(port, () => {
+    console.log(`Serving on PORT ${port}`);
+})
+
+const secret = process.env.SECRET || 'thisshouldbeabettersecrete';
+
+const store = new MongoStore({
+    url: dbURL,
+    secret,
+    touchAfter: 24 * 60 * 60
+})
+
+store.on('error', function (e){
+    console.log("Session Store Error")
 })
 
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecrete',
+    store,
+    name: 'session',
+    secret,
     resave: false,
     saveUintialized: true,
     cookie: {
